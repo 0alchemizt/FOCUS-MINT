@@ -1,0 +1,82 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0d0d0d;
+  color: white;
+}
+
+header {
+  background-color: #1c1c1c;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+nav a {
+  margin-left: 20px;
+  color: #ccc;
+  text-decoration: none;
+}
+
+nav a:hover {
+  color: #ff4d00;
+}
+
+.hero {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.cta-button {
+  background-color: #ff4d00;
+  padding: 15px 30px;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.cta-button:hover {
+  background-color: #e64300;
+}
+
+footer {
+  background-color: #1c1c1c;
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  margin-top: 40px;
+}
+
+#toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1c1c1c;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  display: none;
+  font-size: 0.9rem;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+#toast.success {
+  background-color: #28a745;
+}
+
+#toast.error {
+  background-color: #dc3545;
+}
